@@ -1,0 +1,16 @@
+export const ROOT = "/";
+export const APP_PREFIX_PATH = "/app";
+export const AUTH_PREFIX_PATH = "/auth";
+export const DASHBOARD_PREFIX_PATH = "/dashboard";
+export const PAGES_PREFIX_PATH = "/pages";
+
+//-------------------- configurations path  ------------------//
+
+export const CONFIGURATION_PREFIX_PATH = "/configurations"
+export const CATEGORY_PREFIX_PATH = "/categories";
+
+//-------------------- blogs path  ------------------//
+
+export const BLOGS_PREFIX_PATH = "/blogs"
+export const BLOG_ADD_PREFIX_PATH = "/add-blog"
+export const BLOG_EDIT_PREFIX_PATH = "/edit-blog"

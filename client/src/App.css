@@ -1,0 +1,56 @@
+* {
+  font-family: "Quicksand", serif;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #000000;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #000000 #f1f1f1;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.app-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.main-content {
+  flex-grow: 1;
+}
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
