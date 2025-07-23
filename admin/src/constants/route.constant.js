@@ -8,6 +8,9 @@ export const PAGES_PREFIX_PATH = "/pages";
 
 export const CONFIGURATION_PREFIX_PATH = "/configurations"
 export const CATEGORY_PREFIX_PATH = "/categories";
+export const WRITER_PREFIX_PATH = "/writer";
+
+
 
 //-------------------- blogs path  ------------------//
 

@@ -37,10 +37,10 @@ const columns = [
   { _id: 2, name: "Title" },
   { _id: 3, name: "Category" },
   // { _id: 4, name: 'Content' },
-  { _id: 4, name: "Read Time" },
-  { _id: 5, name: "Publish Date" },
-  { _id: 6, name: "Published" },
-  { _id: 7, name: "Action" },
+  // { _id: 4, name: "Read Time" },
+  { _id: 4, name: "Publish Date" },
+  { _id: 5, name: "Published" },
+  { _id: 6, name: "Action" },
 ];
 
 const BlogList = ({
@@ -53,6 +53,7 @@ const BlogList = ({
 }) => {
   const navigateTo = useNavigate();
   const [selectedData, setSelectedData] = useState(null);
+  console.log("selectedData",selectedData)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isPublishedOpen, setIsPublishedOpen] = useState(false);
   const themeColor = useSelector((state) => state?.theme?.themeColor);
@@ -70,7 +71,8 @@ const BlogList = ({
       const resp = await updateBlogPublishedStatus(selectedData?._id);
       if (resp?.success) {
         const updatedBlogList = blogData.map((blog) => {
-          if (blog?.data?.id === selectedData?.data?.id) {
+          console.log("blog",blog);
+          if (blog?._id === selectedData?._id) {
             return { ...blog, published: !blog.published };
           }
           return blog;
@@ -233,7 +235,7 @@ const BlogList = ({
                     </Td>
 
                     {/* <Td>{blog.content}</Td> */}
-                    <Td>{blog.readTime}</Td>
+                    {/* <Td>{blog.readTime}</Td> */}
                     <Td>{formatDate(blog.publishedDate)}</Td>
                     <Td>
                       <div className="flex justify-start text-lg">

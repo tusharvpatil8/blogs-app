@@ -67,6 +67,9 @@ router.patch(
   blogController.updateBlogPublishedStatus
 );
 
+//----------------- --------------- Configurations -------------------------------//
+
+
 //----------------- Blogs category ------------------//
 
 router.post(
@@ -106,5 +109,9 @@ router.delete(
   isAdminAuthentic,
   categoryController.delete
 );
+
+
+//----------------- Writers ------------------//
+
 
 module.exports = router;

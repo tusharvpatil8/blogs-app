@@ -112,6 +112,7 @@ module.exports = {
   deleteBlog: async (req, res, next) => {
     try {
       const blogId = req.params.id;
+      console.log("blogId",blogId)
       await blogService.deleteBlog(blogId);
       return res.status(200).send({
         success: true,

@@ -205,9 +205,10 @@ module.exports = {
   },
 
   deleteBlog: async (blogId) => {
+    console.log("blogId", blogId);
     try {
-      const blog = await Blog.findOneAndDelete(blogId);
-      if (!blog) {
+      const blog = await Blog.deleteOne({ _id: blogId }); // ✅ FIXED
+      if (!blog || blog.deletedCount === 0) {
         throw createError.BadRequest("Invalid blog id.");
       }
       return { message: "Blog deleted successfully." };
@@ -231,43 +232,91 @@ module.exports = {
   //   }
   // },
 
+  // getAllBlogs: async (pageNo, perPage, filter) => {
+  //   try {
+  //     const skip = (pageNo - 1) * perPage;
+
+  //     // Fetch blogs with pagination
+  //     const [blogList, count] = await Promise.all([
+  //       Blog.find(filter)
+  //         .skip(skip)
+  //         .limit(perPage)
+  //         .lean(), // Converts Mongoose documents to plain JS objects
+  //       Blog.countDocuments(filter),
+  //     ]);
+
+  //     // Fetch categories and format
+  //     const blogsWithCategories = await Promise.all(
+  //       blogList.map(async (blog) => {
+  //         const categoryIds = blog.category || [];
+
+  //         const categories = await Category.find({
+  //           _id: { $in: categoryIds },
+  //         }).select("categoryName");
+
+  //         const blog_categories = categories.map((cat) => ({
+  //           value: cat._id,
+  //           label: cat.categoryName,
+  //         }));
+
+  //         return {
+  //           ...blog,
+  //           blog_categories,
+  //         };
+  //       })
+  //     );
+
+  //     return { blogList: blogsWithCategories, count };
+  //     // return { blogList, count };
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // },
+
   getAllBlogs: async (pageNo, perPage, filter) => {
     try {
       const skip = (pageNo - 1) * perPage;
 
-      // Fetch blogs with pagination
-      const [blogList, count] = await Promise.all([
-        Blog.find(filter)
-          .skip(skip)
-          .limit(perPage)
-          .sort({ publishedDate: -1 }) // Optional: sort by latest
-          .lean(), // Converts Mongoose documents to plain JS objects
-        Blog.countDocuments(filter),
+      const blogsWithCategories = await Blog.aggregate([
+        { $match: filter },
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: perPage },
+        {
+          $lookup: {
+            from: "categories",
+            localField: "category",
+            foreignField: "_id",
+            as: "blog_categories",
+          },
+        },
+        {
+          $project: {
+            title: 1,
+            content: 1,
+            author: 1,
+            createdAt: 1,
+            publishedDate: 1,
+            published: 1,
+            image: 1,
+            thumbnailImage: 1,
+            blog_categories: {
+              $map: {
+                input: "$blog_categories",
+                as: "cat",
+                in: {
+                  value: "$$cat._id",
+                  label: "$$cat.categoryName",
+                },
+              },
+            },
+          },
+        },
       ]);
 
-      // Fetch categories and format
-      const blogsWithCategories = await Promise.all(
-        blogList.map(async (blog) => {
-          const categoryIds = blog.category || [];
-
-          const categories = await Category.find({
-            _id: { $in: categoryIds },
-          }).select("categoryName");
-
-          const blog_categories = categories.map((cat) => ({
-            value: cat._id,
-            label: cat.categoryName,
-          }));
-
-          return {
-            ...blog,
-            blog_categories,
-          };
-        })
-      );
+      const count = await Blog.countDocuments(filter);
 
       return { blogList: blogsWithCategories, count };
-      // return { blogList, count };
     } catch (err) {
       throw err;
     }

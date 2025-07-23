@@ -5,6 +5,7 @@ import {
 import {
   CATEGORY_PREFIX_PATH,
   CONFIGURATION_PREFIX_PATH,
+  WRITER_PREFIX_PATH,
 } from "constants/route.constant";
 const configNavigationConfig = [
   {
@@ -24,6 +25,14 @@ const configNavigationConfig = [
         authority: [],
         subMenu: [],
       },
+      // {
+      //   key: "cms.writer",
+      //   path: `${CONFIGURATION_PREFIX_PATH}${WRITER_PREFIX_PATH}`,
+      //   title: "Writer",
+      //   type: NAV_ITEM_TYPE_ITEM,
+      //   authority: [],
+      //   subMenu: [],
+      // },
     ],
   },
 ];

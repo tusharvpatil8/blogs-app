@@ -21,11 +21,6 @@ const CategoriesForm = (props) => {
 
     const payload = {
       categoryName: values?.categoryName,
-      // translation: {
-      //   de: {
-      //     categoryName: values?.translation_de_categoryName,
-      //   },
-      // },
     };
 
     try {
@@ -84,7 +79,7 @@ const CategoriesForm = (props) => {
       >
         <Formik
           initialValues={{
-              categoryName: data?.categoryName,
+            categoryName: data?.categoryName,
             // translation_de_categoryName: data?.translation?.de?.categoryName,
           }}
           validationSchema={CategoriesSchema}
@@ -151,3 +146,176 @@ const CategoriesForm = (props) => {
 };
 
 export default CategoriesForm;
+
+// /* eslint-disable react-hooks/exhaustive-deps */
+// import React, { useEffect, useState } from "react";
+// import { useSelector } from "react-redux";
+
+// import { Input, Button, Drawer } from "components/ui";
+// import api from "service/api";
+// import openNotification from "common/notification";
+// import BlogCategoryValidation from "./blogCategoryValidation";
+// import DisplayError from "common/displayError";
+
+// function BlogCategoryForm(props) {
+//   const { handleCloseClick, report, isOpen } = props;
+//   const themeColor = useSelector((state) => state?.theme?.themeColor);
+//   const primaryColorLevel = useSelector(
+//     (state) => state?.theme?.primaryColorLevel
+//   );
+
+//   const [loading, setLoading] = useState(false);
+//   const [formData, setFormData] = useState({
+//     blog_category_id: "",
+//     name: "",
+//   });
+//   const resetFormData = () => {
+//     setFormData({
+//       ...report,
+//       blog_category_id: "",
+//       name: "",
+//     });
+//   };
+//   const [errorData, setErrorData] = useState({
+//     blog_category_id: "",
+//     name: "",
+//   });
+//   const resetErrorData = () => {
+//     setErrorData({
+//       ...errorData,
+//       blog_category_id: "",
+//       name: "",
+//     });
+//   };
+
+//   useEffect(() => {
+//     if (report) {
+//       setFormData({
+//         ...formData,
+//         blog_category_id: report.blog_category_id
+//           ? report.blog_category_id
+//           : "",
+//         name: report.name ? report.name : "",
+//       });
+//     }
+//   }, [report]);
+
+//   const addUpdateBlogCategory = async (data) => {
+//     try {
+//       setLoading(true);
+//       const response = await api.post(
+//         `admin/cms/blog-category`,
+//         data
+//       );
+
+//       if (response.status) {
+//         openNotification("success", response.message);
+//         setLoading(false);
+//         resetErrorData();
+//         resetFormData();
+//         handleCloseClick();
+//       } else {
+//         setLoading(false);
+//         // resetErrorData();
+//         // resetFormData();
+//         openNotification("danger", response.message);
+//       }
+//     } catch (error) {
+//       openNotification("danger", error.message);
+//       setLoading(false);
+//     } finally {
+//       // setDrawerFlag(()=>!isOpen);
+//     }
+//   };
+
+//   const handleSubmit = async () => {
+//     const infoData = {
+//       blog_category_id: formData ? formData.blog_category_id : "",
+//       name: formData ? formData.name : "",
+//     };
+
+//     const errorStatus = await BlogCategoryValidation(infoData);
+//     if (errorStatus.errorStatus) {
+//       setErrorData(errorStatus);
+//     } else {
+//       await addUpdateBlogCategory(infoData);
+//       // resetFormData();
+//     }
+//   };
+
+//   return (
+//     <>
+//       <Drawer
+//         title={
+//           <div
+//             className={`text-xl font-semibold text-${themeColor}-${primaryColorLevel}`}
+//           >
+//             {report ? "Update Blog Category" : "Add Blog Category"}
+//           </div>
+//         }
+//         isOpen={isOpen}
+//         width={500}
+//         onClose={() => {
+//           resetErrorData();
+//           resetFormData();
+//           handleCloseClick();
+//         }}
+//         onRequestClose={() => {
+//           resetErrorData();
+//           resetFormData();
+//           handleCloseClick();
+//         }}
+//         footer={
+//           <div className="flex w-full justify-between items-center">
+//             <div>
+//               {report?._id && (
+//                 <Button
+//                   type="reset"
+//                   onClick={() => {
+//                     resetErrorData();
+//                     resetFormData();
+//                   }}
+//                 >
+//                   Reset
+//                 </Button>
+//               )}
+//             </div>
+//             <Button
+//               className="white-spinner"
+//               variant="solid"
+//               onClick={handleSubmit}
+//               loading={loading}
+//             >
+//               {report ? "Update" : "Submit"}
+//             </Button>
+//           </div>
+//         }
+//         headerClass="items-start bg-gray-100 dark:bg-gray-700"
+//         footerClass="border-t-2 p-3"
+//       >
+//         <div className="py-2">
+//           <div className={`font-semibold mb-2  `}>Name*</div>
+//           <div className="col-span-2">
+//             <Input
+//               type="text"
+//               autoComplete="off"
+//               placeholder="Please Enter Name"
+//               invalid={errorData?.name ? true : false}
+//               value={formData?.name}
+//               onChange={(e) => {
+//                 setFormData({
+//                   ...formData,
+//                   name: e.target.value,
+//                 });
+//               }}
+//             />
+//             {DisplayError(errorData?.name)}
+//           </div>
+//         </div>
+
+//       </Drawer>
+//     </>
+//   );
+// }
+
+// export default BlogCategoryForm;
