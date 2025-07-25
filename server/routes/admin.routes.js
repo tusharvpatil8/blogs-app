@@ -39,16 +39,18 @@ router.get(
 //------------------------------ Blogs -------------------------//
 
 router.post(
-  "/blog-list",
-  isAdminAuthentic,
-  blogController.getAllBlogs
-);
-router.post(
   "/add-blog",
   isAdminAuthentic,
   // ValidateBody(schemas.blogSchema),
   blogController.addBlog
 );
+
+router.post(
+  "/blog-list",
+  isAdminAuthentic,
+  blogController.getAllBlogs
+);
+
 router.put(
   "/blog/edit/:id",
   isAdminAuthentic,

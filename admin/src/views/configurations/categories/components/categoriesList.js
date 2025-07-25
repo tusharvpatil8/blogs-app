@@ -159,7 +159,7 @@ const CategoriesList = ({
                 return (
                   <Tr
                     key={item?.id}
-                    className={index % 2 !== 0 ? 'bg-red-50' : 'bg-white'}
+                    className={index % 2 !== 0 ? 'bg-blue-50' : 'bg-white'}
                   >
                     <Td>{item.categoryName}</Td>
                     {/* <Td>{item?.translation?.de?.categoryName}</Td> */}

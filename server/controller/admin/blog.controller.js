@@ -143,6 +143,7 @@ module.exports = {
     try {
       const { pageNo = 1, perPage = 10 } = req.body;
       const status = req.params.status;
+      const search = req?.body?.search;
       console.log("status",status);
       let filter = {};
 
@@ -159,9 +160,11 @@ module.exports = {
       }
 
       const { blogList, count } = await blogService.getAllBlogs(
+        search,
         parseInt(pageNo),
         parseInt(perPage),
-        filter
+        filter,
+
       );
 
       res.status(200).send({

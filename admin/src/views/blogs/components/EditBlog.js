@@ -30,12 +30,14 @@ const EditBlog = () => {
   const { id } = useParams();
   const [blogData, setBlogData] = useState({
     title: "",
-    category: [],
+    // category: [],
+    categories: [],
     content: "",
     readTime: "",
     publishedDate: "",
     publishedBlog: "",
     author: "",
+    slugUrl: "",
     image: "",
     thumbnailImage: "",
   });
@@ -98,7 +100,9 @@ const EditBlog = () => {
         setBlogData({
           title: resp?.data?.title || "",
           author: resp?.data?.author || "",
-          category: resp?.data?.blog_categories.map((cat) => cat.value) || [],
+          slugUrl: resp?.data?.slug_url || "",
+          // category: resp?.data?.blog_categories.map((cat) => cat.value) || [],
+          categories: resp?.data?.blog_categories.map((cat) => cat.value) || [],
           content: resp?.data?.content || "",
           readTime: resp?.data?.readTime || "",
           publishedDate: resp?.data?.publishedDate || "",
@@ -134,6 +138,7 @@ const EditBlog = () => {
         publishedDate: formatDate(values?.publishedDate),
         published: publishedBlog,
         content: values?.content,
+        slug_url: values?.slugUrl,
         // image: values.image instanceof File ? "" : values.image,
         image:
           "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
@@ -215,7 +220,7 @@ const EditBlog = () => {
         <Formik
           enableReinitialize
           initialValues={blogData}
-          // validationSchema={BlogSchema}
+          validationSchema={BlogSchema}
           onSubmit={async (values, { setSubmitting }) => {
             await onSave(values, setSubmitting);
           }}
@@ -235,9 +240,9 @@ const EditBlog = () => {
                           <div className="col-span-2">
                             <FormItem
                               // className="mb-8"
-                              label="Blog Title *"
+                              label="Blog Title*"
                               invalid={errors.title && touched.title}
-                              errorMessage={"Required"}
+                              errorMessage={"Blog Title Required"}
                             >
                               <Field
                                 type="text"
@@ -249,51 +254,53 @@ const EditBlog = () => {
                               />
                             </FormItem>
                           </div>
-                          {/* <Card className="mb-4"> */}
+
                           <FormItem
-                            label="Blog Categories *"
-                            invalid={errors.category && touched.category}
-                            errorMessage={"Required"}
+                            label="Blog Categories*"
+                            invalid={errors.categories && touched.categories}
+                            errorMessage={"Blog Category Required"}
                           >
-                            <Field name="category">
+                            <Field name="categories">
                               {({ field, form }) => (
                                 <Select
-                                  isMulti
-                                  options={categoryData.map((cat) => ({
-                                    value: cat._id,
-                                    label: cat.categoryName,
+                                  name="categories"
+                                  placeholder="Please Select Categories"
+                                  options={categoryData.map((category) => ({
+                                    value: category._id || category.id,
+                                    label: category.categoryName,
                                   }))}
-                                  value={field.value.map((id) => {
-                                    const matched = categoryData.find(
-                                      (cat) => cat._id === id
+                                  isMulti
+                                  value={values.categories.map((id) => {
+                                    const category = categoryData.find(
+                                      (cat) => cat._id === id || cat.id === id
                                     );
-                                    return matched
+                                    return category
                                       ? {
-                                          value: matched._id,
-                                          label: matched.categoryName,
+                                          value: category._id || category.id,
+                                          label: category.categoryName,
                                         }
-                                      : { value: id, label: id };
+                                      : {
+                                          value: id,
+                                          label: "Unknown Category",
+                                        };
                                   })}
-                                  onChange={(selectedOptions) =>
-                                    form.setFieldValue(
-                                      "category",
-                                      selectedOptions.map(
-                                        (option) => option.value
-                                      )
-                                    )
+                                  onChange={(val) => {
+                                    const ids = val
+                                      .map((option) => option?.value)
+                                      .filter(Boolean);
+                                    form.setFieldValue("categories", ids);
+                                  }}
+                                  onBlur={() =>
+                                    form.setFieldTouched("categories", true)
                                   }
-                                  onBlur={field.onBlur}
-                                  name={field.name}
-                                  placeholder="Select categories"
                                 />
                               )}
                             </Field>
                           </FormItem>
-                          {/* </Card> */}
 
                           <FormItem
                             // className="mb-8"
-                            label="Read Time *"
+                            label="Read Time*"
                             invalid={errors.readTime && touched.readTime}
                             errorMessage={"Required"}
                           >
@@ -308,8 +315,8 @@ const EditBlog = () => {
                           </FormItem>
 
                           <FormItem
-                            className="mb-8"
-                            label="Publish Date *"
+                            className=""
+                            label="Publish Date*"
                             invalid={
                               errors.publishedDate && touched.publishedDate
                             }
@@ -334,6 +341,21 @@ const EditBlog = () => {
                             </Field>
                           </FormItem>
 
+                          <FormItem
+                            label="Slug URL*"
+                            invalid={errors.slugUrl && touched.slugUrl}
+                            errorMessage={"Slug URL is required"}
+                          >
+                            <Field
+                              type="text"
+                              autoComplete="off"
+                              name="slugUrl"
+                              placeholder="Slug URL"
+                              component={Input}
+                              value={values.slugUrl}
+                            />
+                          </FormItem>
+
                           <FormItem className="mb-8" label="Published *">
                             <Switcher
                               defaultChecked={publishedBlog}
@@ -355,7 +377,7 @@ const EditBlog = () => {
 
                             <FormItem
                               className="mb-8"
-                              label="Blog Content *"
+                              label="Blog Content*"
                               invalid={errors.content && touched.content}
                               errorMessage={"Blog Content Required"}
                             >
@@ -382,9 +404,9 @@ const EditBlog = () => {
 
                     <Card bordered className="mb-4">
                       <FormItem
-                        label="Image *"
+                        label="Image*"
                         invalid={errors.image && touched.image}
-                        errorMessage={"Required"}
+                        errorMessage={"Image Required"}
                       >
                         <Field name="image" type="file">
                           {({ field, form }) => {
@@ -442,7 +464,7 @@ const EditBlog = () => {
                         invalid={
                           errors.thumbnailImage && touched.thumbnailImage
                         }
-                        errorMessage={"Required"}
+                        errorMessage={"Author Profile Image Required"}
                       >
                         <Field name="thumbnailImage" type="file">
                           {({ field, form }) => {
@@ -499,9 +521,9 @@ const EditBlog = () => {
 
                       <FormItem
                         className="mt-8"
-                        label="Author  *"
+                        label="Author*"
                         invalid={errors.author && touched.author}
-                        errorMessage={"Required"}
+                        errorMessage={"Author Required"}
                       >
                         <Field
                           type="text"

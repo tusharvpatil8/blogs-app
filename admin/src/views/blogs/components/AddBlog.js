@@ -197,7 +197,7 @@ const AddBlog = () => {
                         <div className="col-span-2">
                           <FormItem
                             // className="mb-8"
-                            label="Blog Title *"
+                            label="Blog Title*"
                             invalid={errors.title && touched.title}
                             errorMessage={"Blog Title Required"}
                           >
@@ -213,9 +213,9 @@ const AddBlog = () => {
                         </div>
 
                         <FormItem
-                          label="Blog Categories *"
+                          label="Blog Categories*"
                           invalid={errors.categories && touched.categories}
-                          errorMessage={"Blog Categories Required"}
+                          errorMessage={"Blog Category Required"}
                         >
                           <Field name="categories">
                             {({ field, form }) => (
@@ -252,7 +252,7 @@ const AddBlog = () => {
 
                         <FormItem
                           // className="mb-8"
-                          label="Read Time *"
+                          label="Read Time*"
                           invalid={errors.readTime && touched.readTime}
                           errorMessage={"Read Time Required"}
                         >
@@ -267,11 +267,11 @@ const AddBlog = () => {
                         </FormItem>
 
                         <FormItem
-                          label="Publish Date *"
+                          label="Publish Date*"
                           invalid={
                             errors.publishedDate && touched.publishedDate
                           }
-                          errorMessage={"Required"}
+                          errorMessage={"Publish Date Required"}
                         >
                           <Field
                             name="publishedDate"
@@ -292,8 +292,9 @@ const AddBlog = () => {
                             )}
                           </Field>
                         </FormItem>
+
                         <FormItem
-                          className="mb-8"
+                          // className="mb-8"
                           label="Slug URL*"
                           invalid={errors.slugUrl && touched.slugUrl}
                           errorMessage={"Slug URL Required"}

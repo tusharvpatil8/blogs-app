@@ -92,9 +92,9 @@ const CategoriesForm = (props) => {
               <FormContainer>
                 <FormItem
                   className="mb-8"
-                  label="Category *"
+                  label="Category Name*"
                   invalid={errors.categoryName && touched.categoryName}
-                  errorMessage={errors.categoryName}
+                  errorMessage={"Blog Category Required"}
                 >
                   <Field
                     type="text"
@@ -105,25 +105,7 @@ const CategoriesForm = (props) => {
                     value={values.categoryName}
                   />
                 </FormItem>
-                {/* 
-                <FormItem
-                  className="mb-8"
-                  label="Category (German)"
-                  invalid={
-                    errors.translation_de_categoryName &&
-                    touched.translation_de_categoryName
-                  }
-                  errorMessage={'Required'}
-                >
-                  <Field
-                    type="text"
-                    autoComplete="off"
-                    name="translation_de_categoryName"
-                    placeholder="Category in German"
-                    component={Input}
-                    value={values.translation_de_categoryName}
-                  />
-                </FormItem> */}
+                
 
                 <div className="flex justify-end items-center">
                   <Button

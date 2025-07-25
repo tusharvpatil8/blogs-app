@@ -23,11 +23,21 @@ import {
   BLOG_EDIT_PREFIX_PATH,
   BLOGS_PREFIX_PATH,
 } from "constants/route.constant";
-import React, { useState } from "react";
-import { HiOutlinePencil, HiOutlineSearch, HiOutlineTrash } from "react-icons/hi";
+import React, { useEffect, useState } from "react";
+import {
+  HiOutlinePencil,
+  HiOutlineSearch,
+  HiOutlineTrash,
+} from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import { deleteBlog, updateBlogPublishedStatus } from "service/blogService";
+import {
+  deleteBlog,
+  getAllBlogs,
+  updateBlogPublishedStatus,
+} from "service/blogService";
 import { useSelector } from "react-redux";
+import { AiOutlineClose } from "react-icons/ai";
+import { useDebounce } from "use-debounce";
 
 // import authApi from 'service/authApi';
 // import { deleteBlog } from 'service/configService';
@@ -43,35 +53,76 @@ const columns = [
   { _id: 6, name: "Action" },
 ];
 
-const BlogList = ({
-  blogData,
-  setBlogData,
-  loading,
-  getAllBlogData,
-  pagination,
-  setPagination,
-}) => {
+const BlogList = () => {
   const navigateTo = useNavigate();
   const [selectedData, setSelectedData] = useState(null);
-  console.log("selectedData",selectedData)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isPublishedOpen, setIsPublishedOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  // const [debouncedText] = useDebounce(searchText, 1000);
+  const [resultTitle, setResultTitle] = useState(`Result 0 - 0 of 0`);
+  const [debouncedText, setDebouncedText] = useState("");
+
   const themeColor = useSelector((state) => state?.theme?.themeColor);
- const primaryColorLevel = useSelector(
+  const primaryColorLevel = useSelector(
     (state) => state?.theme?.primaryColorLevel
   );
-  const formatDate = (dateString) => {
+
+  const [loading, setLoading] = useState(false);
+  const [blogData, setBlogData] = useState([]);
+  const [pagination, setPagination] = useState({
+    total: "",
+    currentPage: 1,
+  });
+
+    const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { day: "2-digit", month: "short", year: "numeric" };
     return date.toLocaleDateString("en-US", options).replace(/ /g, " ");
   };
+
+  const getAllBlogData = async () => {
+    setLoading(true);
+    try {
+      let payload = {
+        search: debouncedText,
+        perPage: PAGESIZE,
+        pageNo: pagination.currentPage,
+      };
+
+      console.log("Making API call with payload:", payload);
+      const resp = await getAllBlogs(payload);
+      console.log("Received API response:", resp);
+
+      if (resp.success) {
+        setBlogData(resp.data);
+
+        setPagination({
+          ...pagination,
+          total: resp.pagination.count,
+        });
+
+        console.log("Updated pagination state:", pagination);
+      }
+    } catch (err) {
+      console.error("Error fetching blogs:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllBlogData();
+  }, [pagination?.currentPage]);
+
+
 
   const handleUpdateBlogPublishedStatus = async () => {
     try {
       const resp = await updateBlogPublishedStatus(selectedData?._id);
       if (resp?.success) {
         const updatedBlogList = blogData.map((blog) => {
-          console.log("blog",blog);
+          console.log("blog", blog);
           if (blog?._id === selectedData?._id) {
             return { ...blog, published: !blog.published };
           }
@@ -145,41 +196,66 @@ const BlogList = ({
     }
   };
 
+  useEffect(() => {
+    if (!pagination?.count) {
+      setResultTitle("Result 0 - 0 of 0");
+      return;
+    }
+
+    const start = (pagination?.currentPage - 1) * pagination?.perPage + 1;
+    const end = start + blogData.length - 1;
+    const total = pagination?.count;
+
+    setResultTitle(`Result ${start} - ${end} of ${total}`);
+  }, [pagination, blogData]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedText(searchText);
+    }, 200); // debounce delay (500ms)
+
+    return () => {
+      clearTimeout(handler); // cleanup on text change
+    };
+  }, [searchText]);
+  useEffect(() => {
+    getAllBlogData();
+  }, [debouncedText, pagination.currentPage]);
+
   return (
     <>
-     <div className="grid grid-cols-6 gap-4 mb-4">
+      <div className="grid grid-cols-6 gap-4 mb-4">
         <div className="flex col-start-1 col-end-3 gap-2 ">
-          {/* <div
+          <div
             className={`w-auto  text-center rounded-lg font-bold bg-${themeColor}-50 text-${themeColor}-${primaryColorLevel} text-base
                          dark:bg-gray-700 px-4 border border-${themeColor}-${primaryColorLevel} py-2 px-2`}
           >
-            {resultTitle}
-          </div> */}
+            {/* {resultTitle} */}
+          </div>
+        </div>
         <Input
-          placeholder="Search By Blog Title"
+          placeholder="Search By Title"
           className="col-end-7 col-span-2"
-          // value={searchText}
+          value={searchText}
           prefix={
             <HiOutlineSearch
               className={`text-xl text-${themeColor}-${primaryColorLevel}`}
             />
           }
           onChange={(e) => {
-            // setSearchText(e.target.value);
+            setSearchText(e.target.value);
           }}
-          // suffix={
-          //   searchText && (
-          //     <AiOutlineClose
-          //       className={`text-xl text-${themeColor}-${primaryColorLevel}`}
-          //       onClick={() => {
-          //         setSearchText("");
-          //       }}
-          //     />
-          //   )
-          // }
+          suffix={
+            searchText && (
+              <AiOutlineClose
+                className={`text-xl text-${themeColor}-${primaryColorLevel}`}
+                onClick={() => {
+                  setSearchText("");
+                }}
+              />
+            )
+          }
         />
-        </div>
-
       </div>
 
       <Card bordered className="mb-4">
@@ -205,7 +281,7 @@ const BlogList = ({
                 return (
                   <Tr
                     key={blog?._id}
-                    className={index % 2 !== 0 ? "bg-red-50" : "bg-white"}
+                    className={index % 2 !== 0 ? "bg-blue-50" : "bg-white"}
                   >
                     <Td>
                       <Avatar

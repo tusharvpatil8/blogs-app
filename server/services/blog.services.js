@@ -3,6 +3,24 @@ const Blog = require("../model/blog.model");
 const Category = require("../model/category.model");
 const mongoose = require("mongoose");
 
+async function BlogSearchQuery(search) {
+  try {
+    if (search) {
+      const searchText = new RegExp(search, "i");
+      return {
+        $or: [
+          { title: { $regex: searchText } },
+          { content: { $regex: searchText } },
+        ],
+      };
+    }
+    return {};
+  } catch (error) {
+    console.error("BlogSearchQuery error:", error);
+    return {};
+  }
+}
+
 module.exports = {
   addBlog: async (reqData) => {
     try {
@@ -273,12 +291,17 @@ module.exports = {
   //   }
   // },
 
-  getAllBlogs: async (pageNo, perPage, filter) => {
+  getAllBlogs: async (search, pageNo, perPage, filter) => {
     try {
       const skip = (pageNo - 1) * perPage;
+console.log("skip",skip)
+      const searchQuery = await BlogSearchQuery(search);
+      console.log("searchQuery : ", JSON.stringify(searchQuery));
+       const finalQuery = { ...filter, ...searchQuery };
 
       const blogsWithCategories = await Blog.aggregate([
-        { $match: filter },
+        { $match: finalQuery },
+        // { $match: filter },
         { $sort: { createdAt: -1 } },
         { $skip: skip },
         { $limit: perPage },
