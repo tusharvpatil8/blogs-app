@@ -228,7 +228,7 @@ const DataNoFound = () => {
           </g>
         </svg>
         <h3
-          className={`text-${themeColor}-${primaryColorLevel} mt-4 text-center`}
+          className={`text-${themeColor} mt-4 text-center`}
         >
           There is no data to display.
         </h3>

@@ -8,10 +8,7 @@ const CategorySchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-    translation: {
-      type: Object, // Similar to Sequelize's JSONB
-      default: {},
-    },
+   
     active: {
       type: Boolean,
       default: true,

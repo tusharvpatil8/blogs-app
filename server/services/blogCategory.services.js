@@ -15,7 +15,9 @@ module.exports = {
   // ✅ Edit Category
   editCategory: async (categoryId, newData) => {
     try {
-      const category = await CategoryModel.findById(categoryId).select("-createdAt -updatedAt");
+      const category = await CategoryModel.findById(categoryId).select(
+        "-createdAt -updatedAt"
+      );
       if (!category) {
         throw createError.BadRequest("Invalid category id.");
       }
@@ -51,13 +53,13 @@ module.exports = {
     try {
       const skip = (pageNo - 1) * perPage;
 
-      const [totalCount, categories] = await Promise.all([
-        CategoryModel.countDocuments(filter),
-        CategoryModel.find(filter)
-          .select("-createdAt -updatedAt")
-          .skip(skip)
-          .limit(perPage)
-      ]);
+      const totalCount = await CategoryModel.countDocuments(filter);
+
+      const categories = await CategoryModel.find(filter)
+        .select("-createdAt -updatedAt")
+        .sort({ createdAt: -1 }) // Show latest added first
+        .skip(skip)
+        .limit(perPage);
 
       return { totalCount, categories };
     } catch (err) {
@@ -68,7 +70,9 @@ module.exports = {
   // ✅ Get One Category by ID
   getOneCategory: async (categoryId) => {
     try {
-      const category = await CategoryModel.findById(categoryId).select("-createdAt -updatedAt");
+      const category = await CategoryModel.findById(categoryId).select(
+        "-createdAt -updatedAt"
+      );
       if (!category) {
         throw createError.BadRequest("Invalid category id.");
       }

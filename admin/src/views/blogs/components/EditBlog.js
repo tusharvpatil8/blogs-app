@@ -24,6 +24,7 @@ import { editBlog, getSingleBlogDetail } from "service/blogService";
 import useThemeClass from "utils/hooks/useThemeClass";
 import { getAllCategory } from "service/configService";
 import { BlogSchema } from "validations/blog/blogValidationSchema";
+import { formatDateToDDMMMYYYY } from "utils/hoc/helper/dateFormat";
 
 const EditBlog = () => {
   const navigate = useNavigate();
@@ -52,12 +53,6 @@ const EditBlog = () => {
   });
   const [loading, setLoading] = useState(false);
   const [publishedBlog, setPublishedBlog] = useState(false);
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { day: "2-digit", month: "short", year: "numeric" };
-    return date.toLocaleDateString("en-US", options).replace(/ /g, " ");
-  };
 
   const getCategoryData = async () => {
     setLoading(true);
@@ -135,7 +130,7 @@ const EditBlog = () => {
         author: values?.author,
         category: values?.category,
         readTime: values?.readTime,
-        publishedDate: formatDate(values?.publishedDate),
+        publishedDate: formatDateToDDMMMYYYY(values?.publishedDate),
         published: publishedBlog,
         content: values?.content,
         slug_url: values?.slugUrl,
@@ -225,7 +220,7 @@ const EditBlog = () => {
             await onSave(values, setSubmitting);
           }}
         >
-          {({ values, touched, errors, isSubmitting, setFieldValue }) => {
+          {({ values, touched, errors, resetForm, isSubmitting, setFieldValue }) => {
             console.log("values", values);
             return (
               <Form>
@@ -539,19 +534,35 @@ const EditBlog = () => {
                   <Card bordered className="mb-4 sticky -bottom-1">
                     <div className="flex  items-center space-x-2">
                       <Button
-                        onClick={() => navigate(-1)}
                         size="sm"
                         className="ltr:mr-3 rtl:ml-3"
+                        onClick={() => {
+                          resetForm({
+                            values: {
+                              title: "",
+                              categories: [],
+                              readTime: "",
+                              publishedDate: null,
+                              published: null,
+                              slugUrl: "",
+                              content: "",
+                              author: "",
+                              image: null,
+                              thumbnailImage: null,
+                            },
+                          });
+                        }}
                         type="button"
                       >
-                        Discard
+                        Reset
                       </Button>
+
                       <Button
                         size="sm"
-                        loading={isSubmitting}
-                        icon={<AiOutlineSave />}
-                        type="submit"
                         variant="solid"
+                        icon={!loading && <AiOutlineSave color="#fff" />}
+                        loading={isSubmitting}
+                        type="submit"
                       >
                         Save
                       </Button>

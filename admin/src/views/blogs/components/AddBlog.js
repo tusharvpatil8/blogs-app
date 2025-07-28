@@ -180,7 +180,14 @@ const AddBlog = () => {
           await onSave(values, setSubmitting);
         }}
       >
-        {({ values, touched, errors, isSubmitting, setFieldValue }) => {
+        {({
+          values,
+          touched,
+          errors,
+          isSubmitting,
+          resetForm,
+          setFieldValue,
+        }) => {
           console.log("values", values);
           console.log("errors", errors);
 
@@ -489,20 +496,35 @@ const AddBlog = () => {
                 <Card bordered className="mb-4 sticky -bottom-1">
                   <div className="flex  items-center space-x-2">
                     <Button
-                      onClick={() => navigate(-1)}
                       size="sm"
                       className="ltr:mr-3 rtl:ml-3"
+                      onClick={() => {
+                        resetForm({
+                          values: {
+                            title: "",
+                            categories: [],
+                            readTime: "",
+                            publishedDate: null,
+                            published: null,
+                            slugUrl: "",
+                            content: "",
+                            author: "",
+                            image: null,
+                            thumbnailImage: null,
+                          },
+                        });
+                      }}
                       type="button"
                     >
-                      Discard
+                      Reset
                     </Button>
 
                     <Button
                       size="sm"
-                      loading={isSubmitting}
-                      icon={<AiOutlineSave />}
-                      type="submit"
                       variant="solid"
+                      icon={!loading && <AiOutlineSave color="#fff" />}
+                      loading={isSubmitting}
+                      type="submit"
                     >
                       Save
                     </Button>
