@@ -41,9 +41,7 @@ const EditBlog = () => {
     slugUrl: "",
     image: "",
     thumbnailImage: "",
-  });
-  console.log("blogData", blogData);
-
+  }); 
   const [isBlogDataLoaded, setIsBlogDataLoaded] = useState(false);
   const { textTheme } = useThemeClass();
   const [categoryData, setCategoryData] = useState([]);
@@ -130,7 +128,7 @@ const EditBlog = () => {
         author: values?.author,
         category: values?.category,
         readTime: values?.readTime,
-        publishedDate: formatDateToDDMMMYYYY(values?.publishedDate),
+        publishedDate: values?.publishedDate,
         published: publishedBlog,
         content: values?.content,
         slug_url: values?.slugUrl,
@@ -202,9 +200,11 @@ const EditBlog = () => {
           className={`text-xl font-bold ${textTheme} flex justify-start items-center`}
         >
           <Button
-            icon={<HiArrowNarrowLeft size={25} />}
+          size="sm"
+            icon={<HiArrowNarrowLeft size={20} />}
             onClick={() => {
               window.history.back();
+              
             }}
           />
           <span className="mx-4">Edit Blog Details</span>

@@ -153,6 +153,7 @@ const AddBlog = () => {
           className={`text-xl font-bold ${textTheme} flex justify-start items-center`}
         >
           <Button
+           size="sm"
             icon={<HiArrowNarrowLeft size={25} />}
             onClick={() => {
               window.history.back();

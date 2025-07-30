@@ -18,6 +18,7 @@ import THead from "components/ui/Table/THead";
 import Tr from "components/ui/Table/Tr";
 import React, { useEffect, useState } from "react";
 import {
+  HiEye,
   HiOutlinePencil,
   HiOutlineSearch,
   HiOutlineTrash,
@@ -35,6 +36,7 @@ import { PAGESIZE } from "constants/pagination.constant";
 import { AiOutlineClose } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import {
+  BLOG_DETAILS_PREFIX_PATH,
   BLOG_EDIT_PREFIX_PATH,
   BLOGS_PREFIX_PATH,
 } from "constants/route.constant";
@@ -117,18 +119,19 @@ const BlogList = () => {
   }, [debouncedText, pagination.currentPage]);
 
   useEffect(() => {
-  if (!pagination?.total) {
-    setResultTitle("Result 0 - 0 of 0");
-    return;
-  }
+    if (!pagination?.total) {
+      setResultTitle("Result 0 - 0 of 0");
+      return;
+    }
 
-  const start = (pagination.currentPage - 1) * pagination.perPage + 1;
-  const end = start + blogData.length - 1;
-  const total = pagination.total;
+    const start = (pagination.currentPage - 1) * pagination.perPage + 1;
+    const end = start + blogData.length - 1;
+    const total = pagination.total;
 
-  setResultTitle(`Result ${pagination.currentPage} - ${blogData.length} of ${total}`);
-}, [pagination, blogData]);
-
+    setResultTitle(
+      `Result ${pagination.currentPage} - ${blogData.length} of ${total}`
+    );
+  }, [pagination, blogData]);
 
   const handleUpdateBlogPublishedStatus = async () => {
     try {
@@ -241,7 +244,7 @@ const BlogList = () => {
         />
       </div>
 
-      <Card bordered>
+      <>
         {loading ? (
           <div className="flex justify-center items-center py-8">
             <Spinner size="40px" />
@@ -260,45 +263,6 @@ const BlogList = () => {
                     <Th className="text-end">Actions</Th>
                   </Tr>
                 </THead>
-                {/* <TBody>
-                  {blogData.map((item) => (
-                    <Tr key={item._id}>
-                      <Td>
-                        <Avatar src={item?.thumbnail} shape="circle" />
-                      </Td>
-                      <Td>{item?.title}</Td>
-                      <Td>{item?.category?.name}</Td>
-                      <Td>
-                        {formatDateToDDMMMYYYY(item?.createdAt, "dd MMM, yyyy")}
-                      </Td>
-                      <Td>
-                        <Switcher
-                          checked={item?.published}
-                          onChange={(val) => handleStatusChange(val, item._id)}
-                        />
-                      </Td>
-                      <Td className="text-end">
-                        <div className="flex justify-end items-center gap-2">
-                          <BiEdit
-                            size={20}
-                            className="text-blue-600 cursor-pointer"
-                            onClick={() =>
-                              navigate(`/admin/blog/edit/${item._id}`)
-                            }
-                          />
-                          <HiOutlineTrash
-                            size={20}
-                            className="text-red-600 cursor-pointer"
-                            onClick={() => {
-                              setDeleteId(item._id);
-                              setConfirmDialog(true);
-                            }}
-                          />
-                        </div>
-                      </Td>
-                    </Tr>
-                  ))}
-                </TBody> */}
 
                 <TBody>
                   {blogData.map((blog, index) => {
@@ -334,8 +298,6 @@ const BlogList = () => {
                           )}
                         </Td>
 
-                        {/* <Td>{blog.content}</Td> */}
-                        {/* <Td>{blog.readTime}</Td> */}
                         <Td>{formatDateToDDMMMYYYY(blog.publishedDate)}</Td>
                         <Td>
                           <div className="flex justify-start text-lg">
@@ -345,14 +307,23 @@ const BlogList = () => {
                                 setSelectedData(blog);
                                 setIsPublishedOpen(true);
                               }}
-                              // onChange={() => {
-                              //   handleUpdateBlogPublishedStatus(blog);
-                              // }}
                             />
                           </div>
                         </Td>
                         <Td>
                           <div className="flex space-x-2 text-lg">
+                            <Button
+                              className={`cursor-pointer p- hover:text-blue-500`}
+                              shape="circle"
+                              variant="solid"
+                              icon={<HiEye />}
+                              size="sm"
+                              onClick={() =>
+                                navigateTo(
+                                  `${BLOGS_PREFIX_PATH}${BLOG_DETAILS_PREFIX_PATH}/${blog?._id}`
+                                )
+                              }
+                            ></Button>
                             <Button
                               className={`cursor-pointer p-2 hover:text-blue-500`}
                               shape="circle"
@@ -398,9 +369,9 @@ const BlogList = () => {
             </div>
           </>
         ) : (
-           <DataNoFound />
+          <DataNoFound />
         )}
-      </Card>
+      </>
 
       {/* Published Dialogue */}
       <ConfirmDialog
@@ -440,8 +411,6 @@ const BlogList = () => {
 };
 
 export default BlogList;
-
-
 
 // // import NoDataFound from "components/template/NoDataFound";
 // import DataNoFound from "assets/svg/dataNoFound";
@@ -859,4 +828,3 @@ export default BlogList;
 // };
 
 // export default BlogList;
-

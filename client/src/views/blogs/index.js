@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-// import { useSelector } from "react-redux";
 import PageTitle from "../../components/shared/pageTitle";
 import BlogGrid from "./components/blogGrid";
 import { getBlogs } from "../../services/blogsServices";
@@ -8,7 +7,6 @@ import { Button, Spinner } from "../../components/ui";
 // import NoData from "views/noData";
 
 const Blogs = () => {
-  // const selectedLanguage = useSelector((state) => state?.language?.language?.selectedLanguage);
   const [blogData, setBlogData] = useState();
   console.log("🚀 ~ Blogs ~ blogData:", blogData);
   // console.log("🚀 ~ Blogs ~ blogData.length:", blogData?.length)
@@ -31,7 +29,6 @@ const Blogs = () => {
         page_per: pagination?.page_per,
       };
       const response = await getBlogs(formData);
-      console.log("🚀 ~ fetchBlogsData ~ response:", response);
       if (response.success) {
         const totalData = blogData?.length
           ? blogData.concat(response?.data)
@@ -92,7 +89,6 @@ const Blogs = () => {
                 cards={blogData}
                 pagination={pagination}
                 setPagination={setPagination}
-                // blogsIsLoading={blogsIsLoading}
               />
               <div
                 className={`font-syne text-lg w-full flex justify-center font-bold rounded-md py-5`}

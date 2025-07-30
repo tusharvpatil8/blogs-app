@@ -14,7 +14,7 @@ const BlogCard = ({
   timeText,
   onClickCard
 }) => {
-  // console.log("🚀 ~ timeText:", timeText)
+  
   return (
     <>
       <div

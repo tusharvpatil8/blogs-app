@@ -17,3 +17,5 @@ export const WRITER_PREFIX_PATH = "/writer";
 export const BLOGS_PREFIX_PATH = "/blogs"
 export const BLOG_ADD_PREFIX_PATH = "/add-blog"
 export const BLOG_EDIT_PREFIX_PATH = "/edit-blog"
+export const BLOG_DETAILS_PREFIX_PATH = "/blog-details"
+

@@ -136,14 +136,9 @@ const BlogDetails = () => {
                 </>
             ) : blogDetails ? (
                 <>
-                    {/*------ Section-1 Recent blog section -------*/}
+                   
                     <div className="container animate__animated animate__fadeIn">
-                        {/* <div className="hidden lg:block">
-                            <PageTitle title={selectedLanguage?.code === "EN" ? "Blog Details" : "બ્લોગ વિગતો"} />
-                        </div>
-                        <div className="py-10 lg:hidden">
-                            <SectionTitle title={selectedLanguage?.code === "EN" ? "Blog Details" : "બ્લોગ વિગતો"} />
-                        </div> */}
+                        
                         <div>
                             <div className="font-syne font-semibold text-xl text-[#003A7B] lg:pt-20 lg:text-4xl">
                                 <span>{blogDetails?.blog_title}</span>
@@ -158,9 +153,7 @@ const BlogDetails = () => {
                                     <span className="text-[#003A7B]">
                                         <FaCalendar size={isDesktopScreen ? 24 : 20} />
                                     </span>
-                                    {/* <span className="font-outfit font-normal text-sm text-[#003A7B] lg:text-lg">
-                                        {formatDateToDDMMMYYYY(blogDetails?.publish_date)}
-                                    </span> */}
+                      
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <img
@@ -175,7 +168,6 @@ const BlogDetails = () => {
                             </div>
                             <div className="font-outfit font-medium text-base flex flex-wrap items-center gap-5 xl:gap-10 ">
                                 {blogDetails?.blog_categories?.map((category) => {
-                                    // console.log("🚀 ~ {blogDetails?.blog_categories?.map ~ category:",blogDetails?.blog_categories[0]?.value)
                                     return (
                                         <>
                                             <div className="font-syne font-medium ">
@@ -198,12 +190,10 @@ const BlogDetails = () => {
                             </div>
                             <div>
                                 <BlogGrid
-                                    // title={selectedLanguage?.code === "EN" ? "Related Blogs" : "સંબંધિત બ્લોગ્સ"}
                                     titleClass="py-5"
                                     cards={relatedBlogs}
                                     pagination={pagination}
                                     setPagination={setPagination}
-                                // blogsIsLoading={relatedIsLoading}
                                 />
 
                                 <div className={`font-syne text-lg w-full flex justify-center font-bold rounded-md py-5`}>
@@ -212,10 +202,8 @@ const BlogDetails = () => {
                                             variant="solid"
                                             className={``}
                                             size="lg"
-                                            // loading={showMoreIsLoading}
                                             onClick={handleShowMoreClick}
                                         >
-                                            {/* {selectedLanguage?.code === "EN" ? "Show More" : "વધુ બતાવો"} */}
                                         </Button>
                                     </>)}
                                 </div>

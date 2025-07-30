@@ -35,8 +35,10 @@ const Blogs = () => {
           </div>
         </div>
       </Card>
-
-      <BlogList />
+      
+      <Card bordered>
+        <BlogList />
+      </Card>
     </>
   );
 };
