@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const BlogsSchema = new mongoose.Schema(
   {
-     blog_id: {
+    blog_id: {
       type: String,
       required: true,
     },
@@ -10,10 +10,9 @@ const BlogsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-       author: {
-       type: String,
+    author: {
+      type: String,
       required: true,
-
     },
     category: [
       {
@@ -46,15 +45,7 @@ const BlogsSchema = new mongoose.Schema(
       default: `https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80`,
       trim: true,
     },
-    thumbnailAlt: {
-      type: String,
-    },
-    coverAlt: {
-      type: String,
-    },
-    metaImage: {
-      type: String,
-    },
+
     published: {
       type: Boolean,
       default: false,
@@ -67,12 +58,9 @@ const BlogsSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    metaTag: {
-      type: Object, // Equivalent to JSONB
-    },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt
+    timestamps: true,
   }
 );
 

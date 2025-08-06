@@ -3,6 +3,7 @@ const Joi = require("joi");
 module.exports = {
   string: Joi.string().min(0),
   reqString: Joi.string().required(),
+  reqArrayString: Joi.array().items(Joi.string()).min(1).required(),
   reqEmail: Joi.string()
     .email({ tlds: { allow: false } })
     .required(),

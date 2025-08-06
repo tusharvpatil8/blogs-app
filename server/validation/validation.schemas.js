@@ -47,7 +47,7 @@ module.exports = {
     permissions: validate.reqArray,
   }),
 
-  logInSchema: Joi.object()
+  signInadminSchemas: Joi.object()
     .keys({
       email: validate.string,
       password: validate.reqString,
@@ -62,6 +62,7 @@ module.exports = {
     })
     .or("email", "id"),
 
+    
   queryIdSchema: Joi.object().keys({
     id: validate.id,
   }),
@@ -80,5 +81,23 @@ module.exports = {
     // email: validate.email,
   }),
 
-  
+  // ----------------- Blog Schema ----------------------------------------------
+
+  blogSchema: Joi.object().keys({
+    blog_id: validate.string,
+    title: validate.reqString,
+    author: validate.reqString,
+    category: validate.reqArrayString,
+    readTime: validate.reqString,
+    publishedDate: validate.reqDate,
+    content: validate.reqString,
+    slug_url: validate.string,
+    image: validate.reqString,
+    thumbnailImage: validate.reqString,
+    published: validate.boolean,
+  }),
+
+  categorySchema: Joi.object().keys({
+    categoryName: validate.reqString,
+  }),
 };

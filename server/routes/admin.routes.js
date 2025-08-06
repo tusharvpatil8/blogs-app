@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { ValidateBody } = require("../validation/validation.methods");
 const validationSchema = require("../validation/validation.schemas");
-
 const adminAuthController = require("../controller/admin/adminAuth.controller");
 const blogController = require("../controller/admin/blog.controller");
 const categoryController = require("../controller/admin/category.controller");
@@ -20,19 +19,19 @@ router.post(
 
 router.post(
   "/login",
-  // validateBody(validationSchema.signInadminSchemas),
+  ValidateBody(validationSchema.signInadminSchemas),
   adminAuthController.login
 );
 
 router.post(
   "/forgot-password",
-  // ValidateBody(schemas.forgotPasswordSchema),
+  // ValidateBody(validationSchema.forgotPasswordSchema),
   adminAuthController.forgotPassword
 );
 
 router.get(
   "/reset-password/:token",
-  // ValidateBody(schemas.resetForgotPasswordSchema),
+  // ValidateBody(validationSchema.resetForgotPasswordSchema),
   adminAuthController.resetForgottenPassword
 );
 
@@ -41,7 +40,7 @@ router.get(
 router.post(
   "/add-blog",
   isAdminAuthentic,
-  // ValidateBody(schemas.blogSchema),
+  ValidateBody(validationSchema.blogSchema),
   blogController.addBlog
 );
 
@@ -76,14 +75,14 @@ router.patch(
 
 router.post(
   "/category",
-  // ValidateBody(schemas.categorySchema),
+  ValidateBody(validationSchema.categorySchema),
   isAdminAuthentic,
   categoryController.add
 );
 
 router.put(
   "/category/:id",
-  // ValidateBody(schemas.categorySchema),
+  ValidateBody(validationSchema.categorySchema),
   isAdminAuthentic,
   categoryController.edit
 );
