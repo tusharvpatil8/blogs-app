@@ -2,7 +2,6 @@ import axios from "axios";
 import deepParseJson from "../utils/deepParseJson";
 import { PERSIST_STORE_NAME } from "../constants/app.constant";
 import { BACKEND_SERVER_URL } from "../constants/api.constant";
-console.log("BACKEND_SERVER_URL",BACKEND_SERVER_URL)
 const api = axios.create({
   baseURL: BACKEND_SERVER_URL,
 });

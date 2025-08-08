@@ -274,7 +274,7 @@ const BlogList = () => {
                         <Td>
                           <Avatar
                             shape="circle"
-                            src={blog.thumbnailImage}
+                            src={blog.image}
                             alt={blog.title}
                             size="lg"
                           />

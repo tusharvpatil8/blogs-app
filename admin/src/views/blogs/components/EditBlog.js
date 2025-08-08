@@ -31,7 +31,6 @@ const EditBlog = () => {
   const { id } = useParams();
   const [blogData, setBlogData] = useState({
     title: "",
-    // category: [],
     categories: [],
     content: "",
     readTime: "",
@@ -41,7 +40,7 @@ const EditBlog = () => {
     slugUrl: "",
     image: "",
     thumbnailImage: "",
-  }); 
+  });
   const [isBlogDataLoaded, setIsBlogDataLoaded] = useState(false);
   const { textTheme } = useThemeClass();
   const [categoryData, setCategoryData] = useState([]);
@@ -94,7 +93,6 @@ const EditBlog = () => {
           title: resp?.data?.title || "",
           author: resp?.data?.author || "",
           slugUrl: resp?.data?.slug_url || "",
-          // category: resp?.data?.blog_categories.map((cat) => cat.value) || [],
           categories: resp?.data?.blog_categories.map((cat) => cat.value) || [],
           content: resp?.data?.content || "",
           readTime: resp?.data?.readTime || "",
@@ -121,8 +119,22 @@ const EditBlog = () => {
     console.log("🚀 onSave called with values:", values);
     setSubmitting(true);
     try {
-      // const categoryStrings = values.categories.map(String);
-      // console.log('categoryStrings', categoryStrings);
+      // Conditionally upload blog image
+      let uploadImageResp = values.image;
+      if (values.image instanceof File) {
+        const formDataImage = new FormData();
+        formDataImage.append("image", values.image);
+        uploadImageResp = await uploadSingleImage(formDataImage);
+      }
+
+      // Conditionally upload thumbnail image
+      let uploadThumbResp = values.thumbnailImage;
+      if (values.thumbnailImage instanceof File) {
+        const formDataThumb = new FormData();
+        formDataThumb.append("image", values.thumbnailImage);
+        uploadThumbResp = await uploadSingleImage(formDataThumb);
+      }
+
       let payload = {
         title: values?.title,
         author: values?.author,
@@ -132,33 +144,9 @@ const EditBlog = () => {
         published: publishedBlog,
         content: values?.content,
         slug_url: values?.slugUrl,
-        // image: values.image instanceof File ? "" : values.image,
-        image:
-          "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
-        // thumbnailImage: values.thumbnailImage instanceof File ? "" : values.thumbnailImage,
-        thumbnailImage:
-          "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
+        image: uploadImageResp,
+        thumbnailImage: uploadThumbResp,
       };
-
-      // if (values.image instanceof File) {
-      //   const imgResp = await uploadSingleImage(values.image);
-      //   if (imgResp.success) {
-      //     payload.image = imgResp.data;
-      //   } else {
-      //     throw new Error("Image upload failed");
-      //   }
-      // }
-
-      // if (values.thumbnailImage instanceof File) {
-      //   const thumbImgResp = await uploadSingleImage(values.thumbnailImage);
-      //   if (thumbImgResp?.success) {
-      //     payload.thumbnailImage = thumbImgResp.data;
-      //   } else {
-      //     throw new Error(
-      //       thumbImgResp?.message || "Thumbnail image upload failed"
-      //     );
-      //   }
-      // }
 
       const resp = await editBlog(id, payload);
 
@@ -200,11 +188,10 @@ const EditBlog = () => {
           className={`text-xl font-bold ${textTheme} flex justify-start items-center`}
         >
           <Button
-          size="sm"
+            size="sm"
             icon={<HiArrowNarrowLeft size={20} />}
             onClick={() => {
               window.history.back();
-              
             }}
           />
           <span className="mx-4">Edit Blog Details</span>
@@ -220,7 +207,14 @@ const EditBlog = () => {
             await onSave(values, setSubmitting);
           }}
         >
-          {({ values, touched, errors, resetForm, isSubmitting, setFieldValue }) => {
+          {({
+            values,
+            touched,
+            errors,
+            resetForm,
+            isSubmitting,
+            setFieldValue,
+          }) => {
             console.log("values", values);
             return (
               <Form>
@@ -417,13 +411,14 @@ const EditBlog = () => {
                                   alt="Blog Img"
                                 />
                                 <Button
-                                  type="button"
                                   className="absolute top-25 right-0 mt-40 "
+                                  type="button"
+                                  size="sm"
                                   onClick={() =>
                                     form.setFieldValue(field.name, "")
                                   }
                                 >
-                                  <HiTrash size={25} />
+                                  <HiTrash size={20} />
                                 </Button>
                               </div>
                             ) : (
@@ -477,13 +472,14 @@ const EditBlog = () => {
                                   alt="Blog Thumbnail Img"
                                 />
                                 <Button
-                                  type="button"
                                   className="absolute top-25 right-0 mt-40 "
+                                  type="button"
+                                  size="sm"
                                   onClick={() =>
                                     form.setFieldValue(field.name, "")
                                   }
                                 >
-                                  <HiTrash size={25} />
+                                  <HiTrash size={20} />
                                 </Button>
                               </div>
                             ) : (

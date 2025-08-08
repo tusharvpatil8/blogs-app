@@ -17,7 +17,6 @@ function useAuth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const query = useQuery();
-  console.log("query", query);
 
   const { token, signedIn, expired } = useSelector(
     (state) => state.auth.session

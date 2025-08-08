@@ -4,10 +4,24 @@ export const addSingleProductImage = (formData) => {
   return api.post(`common/image`, formData);
 };
 
-export const uploadSingleImage = (imageFile) => {
-  const imageDate = new FormData();
-  imageDate.append('image', imageFile);
-  return api.post('common/image', imageDate);
+// export const uploadSingleImage = (imageFile) => {
+//   const imageDate = new FormData();
+//   imageDate.append('image', imageFile);
+//   return api.post('common/image', imageDate);
+// };
+
+export const uploadSingleImage = async (formData) => {
+  try {
+    const res = await api.post("/common/image", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log("res.data",res.data)
+    return res.data;
+  } catch (err) {
+    throw err.response?.data || err;
+  }
 };
 
 // service/commonService.js

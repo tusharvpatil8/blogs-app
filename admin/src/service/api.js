@@ -11,13 +11,10 @@ console.log("api", api);
 api.interceptors.request.use(
   async function (config) {
     const user = localStorage.getItem(PERSIST_STORE_NAME);
-console.log("admin user",user)
 
     const authData = JSON.parse(user)?.auth;
-console.log("admin authData",authData)
 
     const token = JSON.parse(authData)?.session?.token;
-console.log("admin token",token)
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

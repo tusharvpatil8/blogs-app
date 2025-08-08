@@ -5,6 +5,7 @@ const router = express.Router();
 // const schemas = require("../validation/validation.schemas");
 // const { ValidateBody } = require("../validation/validation.methods");
 const fileUploadController = require("../common/fileUpload.controller");
+const upload = require("../middleware/multer.upload");
 //---------------------- file upload ----------------------//
 
 // router.post(
@@ -35,6 +36,10 @@ const fileUploadController = require("../common/fileUpload.controller");
 //   fileUploadController.deleteMultipleImage
 // );
 
-
+router.post(
+  "/image",
+  upload.single("image"),
+  fileUploadController.uploadImage
+);
 
 module.exports = router;
